@@ -210,6 +210,11 @@ section {
 .nav-link:hover,
 .nav-link.active {
     color: var(--color-primary);
+    /* Background removed by default, will add if needed or keep text only */
+    /* background: rgba(0, 102, 255, 0.1); Keeping global for now or removing? User complained about mobile. Let's keep desktop as is if not requested? Re-reading: "side hamburger menu... selection highlight... move...". Only mobile context.
+       However, the prompt "remove the selection highlight" might imply generally. But context is mobile.
+       I will override in mobile media query.
+    */
     background: rgba(0, 102, 255, 0.1);
 }
 
@@ -1131,18 +1136,35 @@ section {
         display: flex;
     }
 
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
     .nav-menu {
         position: fixed;
-        top: 70px;
+        top: 0;
+        /* Align to top of viewport */
         right: -100%;
         width: 70%;
         max-width: 300px;
-        height: calc(100vh - 70px);
+        height: 100vh;
+        /* Full height */
         background: var(--color-white);
         flex-direction: column;
-        padding: var(--spacing-lg);
+        padding: 100px 0 var(--spacing-lg) 0;
+        /* Add top padding to clear header */
         box-shadow: var(--shadow-lg);
         transition: right var(--transition-medium);
+        z-index: 999;
+        /* Below navbar (1000) but above content */
     }
 
     .nav-menu.active {
@@ -1151,8 +1173,23 @@ section {
 
     .nav-link {
         width: 100%;
-        padding: var(--spacing-md);
+        padding: var(--spacing-md) var(--spacing-lg);
         border-bottom: 1px solid var(--color-gray);
+        border-radius: 0;
+        font-size: 1.1rem;
+        /* Slightly larger base mobile font */
+        background: transparent !important;
+        /* Force remove background in mobile */
+    }
+
+    .nav-link.active {
+        font-weight: 800;
+        /* Bold */
+        font-size: 1.4rem;
+        /* Bigger font size */
+        color: var(--color-primary);
+        padding-left: calc(var(--spacing-lg) + 5px);
+        /* Subtle shift */
     }
 
     /* Hero */

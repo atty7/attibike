@@ -1,47 +1,49 @@
 // ========================================
 // Smooth Scrolling Navigation
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // Navigation smooth scrolling
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('section[id]');
-    
+
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
-            
+
             if (targetSection) {
                 const navbarHeight = document.querySelector('.navbar').offsetHeight;
                 const targetPosition = targetSection.offsetTop - navbarHeight;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
-                
+
                 // Close mobile menu if open
                 const navMenu = document.getElementById('navMenu');
                 if (navMenu.classList.contains('active')) {
                     navMenu.classList.remove('active');
+                    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                    if (mobileMenuToggle) mobileMenuToggle.classList.remove('active');
                 }
             }
         });
     });
-    
+
     // ========================================
     // Active Navigation Link on Scroll
     // ========================================
     function updateActiveNavLink() {
         const scrollPos = window.scrollY + 100;
-        
+
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.offsetHeight;
             const sectionId = section.getAttribute('id');
-            
+
             if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
                 navLinks.forEach(link => {
                     link.classList.remove('active');
@@ -52,62 +54,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     window.addEventListener('scroll', updateActiveNavLink);
-    
+
     // ========================================
     // Mobile Menu Toggle
     // ========================================
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navMenu = document.getElementById('navMenu');
-    
+
     if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', function() {
+        mobileMenuToggle.addEventListener('click', function () {
             navMenu.classList.toggle('active');
-            
-            // Animate hamburger icon
-            const spans = this.querySelectorAll('span');
-            if (navMenu.classList.contains('active')) {
-                spans[0].style.transform = 'rotate(45deg) translateY(10px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translateY(-10px)';
-            } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
+            this.classList.toggle('active'); // Toggle class on button itself
         });
     }
-    
+
     // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!e.target.closest('.navbar') && navMenu.classList.contains('active')) {
             navMenu.classList.remove('active');
-            const spans = mobileMenuToggle.querySelectorAll('span');
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+            mobileMenuToggle.classList.remove('active');
         }
     });
-    
+
     // ========================================
     // Navbar Scroll Effect
     // ========================================
     const navbar = document.getElementById('navbar');
     let lastScroll = 0;
-    
-    window.addEventListener('scroll', function() {
+
+    window.addEventListener('scroll', function () {
         const currentScroll = window.pageYOffset;
-        
+
         if (currentScroll > 100) {
             navbar.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
         } else {
             navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
         }
-        
+
         lastScroll = currentScroll;
     });
-    
+
     // ========================================
     // Gallery Lightbox Functionality
     // ========================================
@@ -118,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const lightboxPrev = document.getElementById('lightboxPrev');
     const lightboxNext = document.getElementById('lightboxNext');
     const lightboxCounter = document.getElementById('lightboxCounter');
-    
+
     let currentImageIndex = 0;
     const images = Array.from(galleryItems).map(item => {
         return {
@@ -126,26 +114,26 @@ document.addEventListener('DOMContentLoaded', function() {
             alt: item.querySelector('img').alt
         };
     });
-    
+
     // Open lightbox
     galleryItems.forEach((item, index) => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             currentImageIndex = index;
             openLightbox();
         });
     });
-    
+
     function openLightbox() {
         lightbox.classList.add('active');
         updateLightboxImage();
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     }
-    
+
     function closeLightbox() {
         lightbox.classList.remove('active');
         document.body.style.overflow = ''; // Restore scrolling
     }
-    
+
     function updateLightboxImage() {
         if (images[currentImageIndex]) {
             lightboxImage.src = images[currentImageIndex].src;
@@ -153,35 +141,35 @@ document.addEventListener('DOMContentLoaded', function() {
             lightboxCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
         }
     }
-    
+
     // Close lightbox
     lightboxClose.addEventListener('click', closeLightbox);
-    
+
     // Close on background click
-    lightbox.addEventListener('click', function(e) {
+    lightbox.addEventListener('click', function (e) {
         if (e.target === lightbox) {
             closeLightbox();
         }
     });
-    
+
     // Previous image
-    lightboxPrev.addEventListener('click', function(e) {
+    lightboxPrev.addEventListener('click', function (e) {
         e.stopPropagation();
         currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
         updateLightboxImage();
     });
-    
+
     // Next image
-    lightboxNext.addEventListener('click', function(e) {
+    lightboxNext.addEventListener('click', function (e) {
         e.stopPropagation();
         currentImageIndex = (currentImageIndex + 1) % images.length;
         updateLightboxImage();
     });
-    
+
     // Keyboard navigation
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (!lightbox.classList.contains('active')) return;
-        
+
         if (e.key === 'Escape') {
             closeLightbox();
         } else if (e.key === 'ArrowLeft') {
@@ -192,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateLightboxImage();
         }
     });
-    
+
     // ========================================
     // Scroll Animations (Fade-in on viewport)
     // ========================================
@@ -200,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
-    const observer = new IntersectionObserver(function(entries) {
+
+    const observer = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
@@ -209,24 +197,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, observerOptions);
-    
+
     // Apply fade-in animation to cards
     const animatedElements = document.querySelectorAll(
         '.feature-card, .brand-card, .service-card, .service-item, .gallery-item'
     );
-    
+
     animatedElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
         observer.observe(el);
     });
-    
+
     // ========================================
     // Lazy Loading Images
     // ========================================
     const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    
+
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
@@ -238,28 +226,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        
+
         lazyImages.forEach(img => imageObserver.observe(img));
     }
-    
+
     // ========================================
     // Phone Number Click Tracking (Optional)
     // ========================================
     const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
     phoneLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
             // You can add analytics tracking here
             console.log('Phone number clicked:', this.href);
         });
     });
-    
+
     // ========================================
     // Smooth Scroll to Top on Page Load
     // ========================================
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         window.scrollTo(0, 0);
     });
-    
+
 });
 
 // ========================================
