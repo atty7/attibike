@@ -70,11 +70,11 @@ atti-bike-med/
 
 Adaugă următoarele records la DNS provider-ul tău:
 
-```
+````
 Type    Name    Value
 A       @       76.76.21.21
 CNAME   www     cname.vercel-dns.com
-```
+````
 
 ## 📞 Contact
 
