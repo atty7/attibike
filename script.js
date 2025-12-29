@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px 200px 0px' // Load 200px before appearing
     };
 
     const observer = new IntersectionObserver(function (entries) {
@@ -203,10 +203,10 @@ document.addEventListener('DOMContentLoaded', function () {
         '.feature-card, .brand-card, .service-card, .service-item, .gallery-item'
     );
 
-    animatedElements.forEach((el, index) => {
+    animatedElements.forEach((el) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
-        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; // Removed global index delay
         observer.observe(el);
     });
 
